@@ -16,6 +16,12 @@ export const typography: TypographyOptions = {
     lineHeight: '24px',
     fontWeight: 500,
   },
+  h4: {
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 400,
+    letterSpacing: '0.5px',
+  },
   h6: {
     fontSize: 12,
     lineHeight: '16px',

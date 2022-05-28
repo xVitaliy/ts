@@ -1,6 +1,10 @@
-import { Box, styled } from '@mui/material';
+import { Box, BoxProps, styled } from '@mui/material';
 
-export const WrapperStyled = styled(Box)(({ theme, width }) => {
+interface WrapperStyledProps extends BoxProps {
+  width?: string;
+}
+
+export const WrapperStyled = styled(Box)<WrapperStyledProps>(({ width }) => {
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -9,9 +13,6 @@ export const WrapperStyled = styled(Box)(({ theme, width }) => {
     width: width,
     marginBottom: '24px',
     minWidth: '328px',
-    [theme.breakpoints.down('mobile')]: {
-      margin: '10px 0',
-    },
     '& .MuiInputAdornment-root': {
       marginRight: 0,
     },
