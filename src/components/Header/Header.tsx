@@ -12,15 +12,30 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Container } from '@mui/material';
 import { SearchIcon } from '../Icons';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [token, setToken] = useState<string | null>('');
+  const navigate = useNavigate();
 
-  const handleClose = () => {
+  const goRegisterPage = () => {
     setAnchorEl(null);
+    navigate('registration');
   };
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  useEffect(() => {
+    setToken(localStorage.getItem('myToken'));
+  }, [localStorage.getItem('myToken')]);
+
+  const logOut = () => {
+    setAnchorEl(null);
+    localStorage.removeItem('myToken');
+    navigate('/login');
   };
 
   return (
@@ -50,7 +65,7 @@ export const Header = () => {
               id='menu-appbar'
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
-              onClose={handleClose}
+              onClose={goRegisterPage}
               PaperProps={{
                 elevation: 0,
                 sx: {
@@ -81,11 +96,11 @@ export const Header = () => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleClose}>
-                <MenuListIcon_1 />
-                Увійти
+              <MenuItem onClick={logOut}>
+                <MenuListIcon_1 onClick={logOut} />
+                {!token ? 'Увійти' : 'Вийти'}
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={goRegisterPage}>
                 <MenuListIcon_2 />
                 Зареєструватись
               </MenuItem>

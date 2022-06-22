@@ -1,7 +1,18 @@
-import { Box, CircularProgress, Portal } from '@mui/material';
+/* eslint-disable */
+import { Box, CircularProgress, Portal, styled } from '@mui/material';
 import React from 'react';
 
-export const Overlay: React.FC = () => {
+type OverlayType = {
+  regTrue?: boolean;
+  regFalse?: boolean;
+};
+
+export const Overlay: React.FC<OverlayType> = ({
+  // eslint-disable-next-line no-unused-vars
+  regTrue = false,
+  // eslint-disable-next-line no-unused-vars
+  regFalse = false,
+}) => {
   return (
     <Portal>
       <Box
@@ -18,20 +29,32 @@ export const Overlay: React.FC = () => {
           justifyContent: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '96px',
-            height: '96px',
-            borderRadius: '50%',
-            background: '#fff',
-          }}
-        >
+        <ProgressBox>
           <CircularProgress />
-        </Box>
+        </ProgressBox>
       </Box>
     </Portal>
   );
 };
+
+const ProgressBox = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '96px',
+  height: '96px',
+  borderRadius: '50%',
+  background: '#fff',
+});
+
+const RegistrationBlock = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '40px',
+  color: '#fff',
+  width: '350px',
+  border: '5px solid #0A458E',
+  padding: '30px 50px',
+  textAlign: 'center',
+});

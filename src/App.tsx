@@ -2,12 +2,12 @@ import React from 'react';
 import './App.css';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './theme/theme';
-import { ResetPasswordPage } from './pages/ResetPasswordPage/ResetPasswordPage';
+import { RouterProvider } from './Router/RouterProvider';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <ResetPasswordPage />
+      <RouterProvider />
     </ThemeProvider>
   );
 }

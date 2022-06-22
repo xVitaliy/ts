@@ -10,6 +10,13 @@ import {
 } from './styles';
 
 export const SocialBlock = memo(() => {
+  const socialIcon = [
+    { icon: <GoogleIcon /> },
+    { icon: <FacebookIcon /> },
+    { icon: <TwitterIcon /> },
+    { icon: <LinkedInIcon /> },
+  ];
+
   return (
     <SocialWrapperStyled>
       <BlockStyled>
@@ -23,18 +30,9 @@ export const SocialBlock = memo(() => {
         <Typography variant={'h6'}>вхід через соцмережі</Typography>
       </BlockStyled>
       <SocialBlockStyled>
-        <IconButton>
-          <GoogleIcon />
-        </IconButton>
-        <IconButton>
-          <FacebookIcon />
-        </IconButton>
-        <IconButton>
-          <TwitterIcon />
-        </IconButton>
-        <IconButton>
-          <LinkedInIcon />
-        </IconButton>
+        {socialIcon.map((item, i) => (
+          <IconButton key={i}>{item.icon}</IconButton>
+        ))}
       </SocialBlockStyled>
     </SocialWrapperStyled>
   );

@@ -4,7 +4,9 @@ import { Box, Typography } from '@mui/material';
 export const HomePage = () => {
   return (
     <Box>
-      <Typography variant={'h1'}>HomePage</Typography>
+      <Typography variant={'h1'} textAlign={'center'}>
+        HomePage
+      </Typography>
     </Box>
   );
 };
