@@ -65,7 +65,7 @@ export const Header = () => {
               id='menu-appbar'
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
-              onClose={goRegisterPage}
+              onClose={() => setAnchorEl(null)}
               PaperProps={{
                 elevation: 0,
                 sx: {

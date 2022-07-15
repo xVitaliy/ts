@@ -8,11 +8,11 @@ import {
 } from 'react-router-dom';
 import { Layout } from '../components/Layout/Layout';
 import { HomePage } from '../pages/HomePage/HomePage';
-import { LoginPage } from '../pages/LoginPage/LoginPage';
 import { ResetPasswordPage } from '../pages/ResetPasswordPage/ResetPasswordPage';
 import { RegisterPage } from '../pages/RegisterPage/RegisterPage';
 import { ResetPasswordStepTwoPage } from '../pages/ResetPasswordOkPage/ResetPasswordStepTwoPage';
 import { ChangePasswordPage } from '../pages/ChangePasswordPage/ChangePasswordPage';
+import { TestingGqlPage } from '../pages/TestingGqlPage/TestingGqlPage';
 
 type RequireAuthProps = {
   children: JSX.Element;
@@ -32,10 +32,18 @@ export const RouterProvider = () => {
             }
           />
           <Route
-            path={'login'}
+            index
             element={
               <RequireAuth>
-                <LoginPage />
+                <HomePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path={'gql'}
+            element={
+              <RequireAuth>
+                <TestingGqlPage />
               </RequireAuth>
             }
           />
