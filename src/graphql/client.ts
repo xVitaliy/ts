@@ -16,7 +16,7 @@ export const useErrorsStore = create<ErrorType>(() => ({
 }));
 
 const httpLink = createUploadLink({
-  uri: `https://api.spacex.land/graphql/`,
+  uri: `http://localhost:4000/graphql`,
 });
 
 const errorLink = onError(({ networkError, graphQLErrors }) => {
