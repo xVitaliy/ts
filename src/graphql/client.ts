@@ -1,6 +1,9 @@
-import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, InMemoryCache, split } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
+import { createClient } from 'graphql-ws';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from '@apollo/client/utilities';
 import create from 'zustand';
 
 type ErrorType = {
@@ -18,6 +21,24 @@ export const useErrorsStore = create<ErrorType>(() => ({
 const httpLink = createUploadLink({
   uri: `http://localhost:4000/graphql`,
 });
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: 'ws://localhost:4000/graphql',
+  }),
+);
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
 
 const errorLink = onError(({ networkError, graphQLErrors }) => {
   if (graphQLErrors) {
@@ -47,6 +68,6 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
 });
 
 export const client = new ApolloClient({
-  link: ApolloLink.from([errorLink, httpLink]),
+  link: ApolloLink.from([errorLink, splitLink]),
   cache: new InMemoryCache(),
 });

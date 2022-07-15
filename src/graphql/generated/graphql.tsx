@@ -54,6 +54,7 @@ export type MutationCreateTodoArgs = {
 export type MutationEditTodoArgs = {
   data: EditTodoInputDto;
 };
+
 export type MutationRemoveTodoArgs = {
   id: Scalars['ID'];
 };
@@ -118,6 +119,79 @@ export type CreateTodoMutationVariables = Exact<{
 export type CreateTodoMutation = {
   __typename?: 'Mutation';
   createTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
+export type SubscriptionUpdateTodoSubscriptionVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type SubscriptionUpdateTodoSubscription = {
+  __typename?: 'Subscription';
+  updatedTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
+export type UpdateTodoSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type UpdateTodoSubscription = {
+  __typename?: 'Subscription';
+  updatedTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
+export type CompletedTodoMutationVariables = Exact<{
+  data: EditTodoInputDto;
+}>;
+
+export type CompletedTodoMutation = {
+  __typename?: 'Mutation';
+  editTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
+export type MutationMutationVariables = Exact<{
+  removeTodoId: Scalars['ID'];
+}>;
+
+export type MutationMutation = {
+  __typename?: 'Mutation';
+  removeTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
+export type RemoveTodoMutationVariables = Exact<{
+  removeTodoId: Scalars['ID'];
+}>;
+
+export type RemoveTodoMutation = {
+  __typename?: 'Mutation';
+  removeTodo: {
     __typename?: 'Todo';
     title: string;
     description: string;
@@ -232,4 +306,246 @@ export type CreateTodoMutationResult =
 export type CreateTodoMutationOptions = Apollo.BaseMutationOptions<
   CreateTodoMutation,
   CreateTodoMutationVariables
+>;
+export const SubscriptionUpdateTodoDocument = gql`
+  subscription SubscriptionUpdateTodo {
+    updatedTodo {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+
+/**
+ * __useSubscriptionUpdateTodoSubscription__
+ *
+ * To run a query within a React component, call `useSubscriptionUpdateTodoSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionUpdateTodoSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscriptionUpdateTodoSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscriptionUpdateTodoSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<
+    SubscriptionUpdateTodoSubscription,
+    SubscriptionUpdateTodoSubscriptionVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<
+    SubscriptionUpdateTodoSubscription,
+    SubscriptionUpdateTodoSubscriptionVariables
+  >(SubscriptionUpdateTodoDocument, options);
+}
+export type SubscriptionUpdateTodoSubscriptionHookResult = ReturnType<
+  typeof useSubscriptionUpdateTodoSubscription
+>;
+export type SubscriptionUpdateTodoSubscriptionResult =
+  Apollo.SubscriptionResult<SubscriptionUpdateTodoSubscription>;
+export const UpdateTodoDocument = gql`
+  subscription updateTodo {
+    updatedTodo {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+
+/**
+ * __useUpdateTodoSubscription__
+ *
+ * To run a query within a React component, call `useUpdateTodoSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTodoSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpdateTodoSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateTodoSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<
+    UpdateTodoSubscription,
+    UpdateTodoSubscriptionVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<
+    UpdateTodoSubscription,
+    UpdateTodoSubscriptionVariables
+  >(UpdateTodoDocument, options);
+}
+export type UpdateTodoSubscriptionHookResult = ReturnType<
+  typeof useUpdateTodoSubscription
+>;
+export type UpdateTodoSubscriptionResult =
+  Apollo.SubscriptionResult<UpdateTodoSubscription>;
+export const CompletedTodoDocument = gql`
+  mutation CompletedTodo($data: EditTodoInputDto!) {
+    editTodo(data: $data) {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+export type CompletedTodoMutationFn = Apollo.MutationFunction<
+  CompletedTodoMutation,
+  CompletedTodoMutationVariables
+>;
+
+/**
+ * __useCompletedTodoMutation__
+ *
+ * To run a mutation, you first call `useCompletedTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCompletedTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [completedTodoMutation, { data, loading, error }] = useCompletedTodoMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCompletedTodoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CompletedTodoMutation,
+    CompletedTodoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CompletedTodoMutation,
+    CompletedTodoMutationVariables
+  >(CompletedTodoDocument, options);
+}
+export type CompletedTodoMutationHookResult = ReturnType<
+  typeof useCompletedTodoMutation
+>;
+export type CompletedTodoMutationResult =
+  Apollo.MutationResult<CompletedTodoMutation>;
+export type CompletedTodoMutationOptions = Apollo.BaseMutationOptions<
+  CompletedTodoMutation,
+  CompletedTodoMutationVariables
+>;
+export const MutationDocument = gql`
+  mutation Mutation($removeTodoId: ID!) {
+    removeTodo(id: $removeTodoId) {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+export type MutationMutationFn = Apollo.MutationFunction<
+  MutationMutation,
+  MutationMutationVariables
+>;
+
+/**
+ * __useMutationMutation__
+ *
+ * To run a mutation, you first call `useMutationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMutationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mutationMutation, { data, loading, error }] = useMutationMutation({
+ *   variables: {
+ *      removeTodoId: // value for 'removeTodoId'
+ *   },
+ * });
+ */
+export function useMutationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    MutationMutation,
+    MutationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<MutationMutation, MutationMutationVariables>(
+    MutationDocument,
+    options,
+  );
+}
+export type MutationMutationHookResult = ReturnType<typeof useMutationMutation>;
+export type MutationMutationResult = Apollo.MutationResult<MutationMutation>;
+export type MutationMutationOptions = Apollo.BaseMutationOptions<
+  MutationMutation,
+  MutationMutationVariables
+>;
+export const RemoveTodoDocument = gql`
+  mutation removeTodo($removeTodoId: ID!) {
+    removeTodo(id: $removeTodoId) {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+export type RemoveTodoMutationFn = Apollo.MutationFunction<
+  RemoveTodoMutation,
+  RemoveTodoMutationVariables
+>;
+
+/**
+ * __useRemoveTodoMutation__
+ *
+ * To run a mutation, you first call `useRemoveTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTodoMutation, { data, loading, error }] = useRemoveTodoMutation({
+ *   variables: {
+ *      removeTodoId: // value for 'removeTodoId'
+ *   },
+ * });
+ */
+export function useRemoveTodoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveTodoMutation,
+    RemoveTodoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveTodoMutation, RemoveTodoMutationVariables>(
+    RemoveTodoDocument,
+    options,
+  );
+}
+export type RemoveTodoMutationHookResult = ReturnType<
+  typeof useRemoveTodoMutation
+>;
+export type RemoveTodoMutationResult =
+  Apollo.MutationResult<RemoveTodoMutation>;
+export type RemoveTodoMutationOptions = Apollo.BaseMutationOptions<
+  RemoveTodoMutation,
+  RemoveTodoMutationVariables
 >;
