@@ -71,3 +71,26 @@ export const client = new ApolloClient({
   link: ApolloLink.from([errorLink, splitLink]),
   cache: new InMemoryCache(),
 });
+
+//{
+//     typePolicies: {
+//       Query: {
+//         fields: {
+//           todos: {
+//             keyArgs: ['skip'],
+//             merge: true,
+//             //can take keyArgs if is need
+//             // merge: (existing: any, incoming: any) => {
+//             //   console.log('client', existing, incoming);
+//             //   const prevEdges = existing?.edges || [];
+//             //   const incomingEdges = incoming?.edges || [];
+//             //   return {
+//             //     ...incoming,
+//             //     edges: [...prevEdges, ...incomingEdges],
+//             //   };
+//             // },
+//           },
+//         },
+//       },
+//     },
+//   }

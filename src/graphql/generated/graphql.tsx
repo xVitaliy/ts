@@ -200,6 +200,19 @@ export type RemoveTodoMutation = {
   };
 };
 
+export type RemovedTodoSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type RemovedTodoSubscription = {
+  __typename?: 'Subscription';
+  removedTodo: {
+    __typename?: 'Todo';
+    title: string;
+    description: string;
+    completed: boolean;
+    id: string;
+  };
+};
+
 export const TodosDocument = gql`
   query Todos($data: GetTodosInputDto!) {
     todos(data: $data) {
@@ -549,3 +562,46 @@ export type RemoveTodoMutationOptions = Apollo.BaseMutationOptions<
   RemoveTodoMutation,
   RemoveTodoMutationVariables
 >;
+export const RemovedTodoDocument = gql`
+  subscription removedTodo {
+    removedTodo {
+      title
+      description
+      completed
+      id
+    }
+  }
+`;
+
+/**
+ * __useRemovedTodoSubscription__
+ *
+ * To run a query within a React component, call `useRemovedTodoSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useRemovedTodoSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemovedTodoSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRemovedTodoSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<
+    RemovedTodoSubscription,
+    RemovedTodoSubscriptionVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<
+    RemovedTodoSubscription,
+    RemovedTodoSubscriptionVariables
+  >(RemovedTodoDocument, options);
+}
+export type RemovedTodoSubscriptionHookResult = ReturnType<
+  typeof useRemovedTodoSubscription
+>;
+export type RemovedTodoSubscriptionResult =
+  Apollo.SubscriptionResult<RemovedTodoSubscription>;

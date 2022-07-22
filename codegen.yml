@@ -20,11 +20,16 @@
 #    plugins:
 #      - 'introspection'
 
-overwrite: true
-schema: 'http://localhost:4000/graphql'
+overwrite: true # перезаписывает файлы
+schema: 'http://localhost:4000/graphql' #  URL-адрес вашей конечной точки GraphQL, локальный путь к.graphql файлу, общий
+  # шаблон для ваших файлов схемы GraphQL или файл JavaScript, который экспортирует схему для создания кода.
+  # Это также может быть массив, указывающий несколько схем для генерации кода. Подробнее о поддерживаемых форматах можно прочитать
 documents: 'src/**/*.{js,jsx,ts,tsx,graphql}'
 generates:
-  src/graphql/generated/graphql.tsx:
+  src/graphql/generated/graphql.tsx: #  Массив путей или универсальных шаблонов для файлов, которые экспортируют
+  # документы GraphQL с использованием gqlтега или простой строки; например: ./src/**/*.graphql.
+  # Вы также можете предоставить эти параметры со строкой вместо массива, если имеете дело с одним документом.
+  # Подробнее о поддерживаемых форматах можно прочитать
     plugins:
       - 'typescript'
       - 'typescript-operations'
