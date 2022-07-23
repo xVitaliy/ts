@@ -13,12 +13,14 @@ import { TodosList } from '../../components/TodosList/TodosList';
 import { InputBlock, ComponentBlock } from './styles';
 import { SubscriptionBlock } from '../../components/SubscriptionBlock/SubscriptionBlock';
 import { useAlert } from '../../hook/useAlert';
+import { useMutation } from '@apollo/client';
+import { CREATE_TODO } from '../../graphql/mutation/createTodo.gql';
 
 export const TestingGqlPage = () => {
   const { handleClickVariant } = useAlert();
 
   // eslint-disable-next-line no-unused-vars
-  const { data, refetch } = useGetTodos({
+  const { data } = useGetTodos({
     variables: {
       data: {
         limit: null,
@@ -27,39 +29,89 @@ export const TestingGqlPage = () => {
   });
 
   const [createTodoMutation] = useCreateTodo();
+  // const [createTodo] = useMutation(CREATE_TODO, {
+  //   update(cache) {
+  //     console.log(cache.readQuery({ query: GET_TODOS }));
+  //   },
+  // });
 
   const handleSubmit = (values, { resetForm }) => {
-    createTodoMutation({
+    return createTodoMutation({
       variables: {
         data: values,
       },
-      refetchQueries: [GET_TODOS],
       onCompleted: () => resetForm(),
-      // eslint-disable-next-line no-unused-vars
-      // update: (cache, { data }) =>
-      //   cache.readQuery({
+
+      // update(cache, { data: { createTodo } }) {
+      //   const { todos } = cache.readQuery({
       //     query: GET_TODOS,
-      //   }),
+      //     variables: {
+      //       data: {
+      //         limit: null,
+      //       },
+      //     },
+      //   });
+      //   const newTotal = todos?.total + 1;
+      //
+      //   cache.writeQuery({
+      //     query: GET_TODOS,
+      //     variables: {
+      //       data: {
+      //         limit: null,
+      //       },
+      //     },
+      //     data: {
+      //       todos: {
+      //         __typename: 'todos',
+      //         total: newTotal,
+      //         edges: [...todos.edges, createTodo],
+      //       },
+      //     },
+      //   });
+      // },
     });
   };
-  //update(cache, { data }) {
-  //         if (data?.removeOrderFromCart?.status) {
-  //           const variables = {
-  //             authKey: AUTH_KEY() as string,
-  //           };
-  //           const cacheData = cache.readQuery<GetCartQuery>({
-  //             query: GET_CART,
-  //             variables,
-  //           });
-  const { data: updatedTodoSubscription } = useUpdatedTodoSubscription();
-  const { data: removeTodoSubscription } = useRemoveTodoSubscription();
+
+  const { data: updatedTodoSubscription } = useUpdatedTodoSubscription({
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      console.log(subscriptionData.data.updatedTodo);
+      client.cache.modify({
+        fields: {
+          todos(currentTodo = []) {
+            return {
+              __typename: 'todos',
+              total: currentTodo.total + 1,
+              edges: [...currentTodo.edges, currentTodo],
+            };
+          },
+        },
+      });
+    },
+  });
+
+  const { data: removeTodoSubscription } = useRemoveTodoSubscription({
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      client.cache.modify({
+        fields: {
+          todos(currentTodo = []) {
+            return {
+              __typename: 'todos',
+              total: currentTodo.total - 1,
+              edges: currentTodo.edges?.filter(
+                (todo) =>
+                  todo.__ref !== `Todo:${subscriptionData.data.removedTodo.id}`,
+              ),
+            };
+          },
+        },
+      });
+    },
+  });
 
   useEffect(() => {
     if (data) {
       handleClickVariant('success');
     }
-    //todo
-    // refetch();
   }, [updatedTodoSubscription, removeTodoSubscription]);
 
   return (

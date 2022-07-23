@@ -1,7 +1,5 @@
-/* eslint-disable */
 import { useCompletedTodo } from '../../graphql/hooks/useMutations/useCompletedTodo';
 import { useRemoveTodo } from '../../graphql/hooks/useMutations/useRemoveTodo';
-import { GET_TODOS } from '../../graphql/queries/getTodos';
 import { Checkbox, FormControlLabel, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -23,7 +21,7 @@ export const TodosList = ({ data }: TodosListProps) => {
   const [removeTodoMutation] = useRemoveTodo();
 
   const handleChangeCompletedTodo = (edge) => {
-    completedTodoMutation({
+    return completedTodoMutation({
       variables: {
         data: {
           id: edge.id,
@@ -36,11 +34,10 @@ export const TodosList = ({ data }: TodosListProps) => {
   };
 
   const handleRemoveTodo = (id) => {
-    removeTodoMutation({
+    return removeTodoMutation({
       variables: {
         removeTodoId: id,
       },
-      refetchQueries: [GET_TODOS],
     });
   };
 

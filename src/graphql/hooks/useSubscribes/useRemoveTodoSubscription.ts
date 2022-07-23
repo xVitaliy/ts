@@ -1,10 +1,8 @@
 /* eslint-disable */
 import * as GENERATED from '../../generated/graphql';
-import { TodosQuery } from '../../generated/graphql';
-import { GET_TODOS } from '../../queries/getTodos';
 
-export const useRemoveTodoSubscription = () => {
-  return GENERATED.useRemovedTodoSubscription();
+export const useRemoveTodoSubscription = (option) => {
+  return GENERATED.useRemovedTodoSubscription({ ...option });
 };
 
 //{
