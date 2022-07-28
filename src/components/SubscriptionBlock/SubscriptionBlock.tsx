@@ -6,14 +6,14 @@ import {
 } from '../../graphql/generated/graphql';
 
 type SubscriptionBlockType = {
-  updatedTodoSubscription: SubscriptionUpdateTodoSubscription;
-  removeTodoSubscription: RemovedTodoSubscription;
+  updatedTodoSubscription?: SubscriptionUpdateTodoSubscription;
+  removeTodoSubscription?: RemovedTodoSubscription;
 };
 
-export const SubscriptionBlock: React.FC<SubscriptionBlockType> = ({
+export const SubscriptionBlock = ({
   updatedTodoSubscription,
   removeTodoSubscription,
-}) => {
+}: SubscriptionBlockType) => {
   return (
     <>
       <Box sx={{ height: '310px' }}>

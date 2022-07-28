@@ -69,28 +69,24 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
 
 export const client = new ApolloClient({
   link: ApolloLink.from([errorLink, splitLink]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    //? fetchPolicy политика выборки данных
+    typePolicies: {
+      Query: {
+        fields: {
+          todos: {
+            keyArgs: ['skip'],
+            merge: (existing, incoming) => {
+              const prevEdges = existing?.edges || [];
+              const incomingEdges = incoming?.edges || [];
+              return {
+                ...incoming,
+                edges: [...prevEdges, ...incomingEdges],
+              };
+            },
+          },
+        },
+      },
+    },
+  }),
 });
-
-// {
-//     typePolicies: {
-//       Query: {
-//         fields: {
-//           todos: {
-//             keyArgs: ['skip'],
-//             merge: true,
-//             //can take keyArgs if is need
-//             // merge: (existing: any, incoming: any) => {
-//             //   console.log('client', existing, incoming);
-//             //   const prevEdges = existing?.edges || [];
-//             //   const incomingEdges = incoming?.edges || [];
-//             //   return {
-//             //     ...incoming,
-//             //     edges: [...prevEdges, ...incomingEdges],
-//             //   };
-//             // },
-//           },
-//         },
-//       },
-//     },
-//   }

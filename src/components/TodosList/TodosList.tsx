@@ -8,20 +8,25 @@ import {
   IconBtnsWrap,
   TypographyStyled,
   ListWrapper,
+  ButtonStyled,
+  Flex,
 } from './styles';
 import React from 'react';
-import { Query } from '../../graphql/generated/graphql';
+import { TodosQuery } from '../../graphql/generated/graphql';
+import { client } from '../../graphql/client';
+import { GET_TODOS } from '../../graphql/queries/getTodos';
 
 type TodosListProps = {
-  data: Query;
+  data?: TodosQuery;
+  handleMore: () => void;
 };
 
-export const TodosList = ({ data }: TodosListProps) => {
+export const TodosList = ({ data, handleMore }: TodosListProps) => {
   const [completedTodoMutation] = useCompletedTodo();
   const [removeTodoMutation] = useRemoveTodo();
 
-  const handleChangeCompletedTodo = (edge) => {
-    return completedTodoMutation({
+  const handleChangeCompletedTodo = async (edge) => {
+    await completedTodoMutation({
       variables: {
         data: {
           id: edge.id,
@@ -33,12 +38,21 @@ export const TodosList = ({ data }: TodosListProps) => {
     });
   };
 
-  const handleRemoveTodo = (id) => {
-    return removeTodoMutation({
+  const handleRemoveTodo = async (id) => {
+    await removeTodoMutation({
       variables: {
         removeTodoId: id,
       },
     });
+  };
+
+  const cacheTodosData = client.cache.readQuery<TodosQuery>({
+    query: GET_TODOS,
+  });
+
+  const allTodosReceived = () => {
+    const todos = cacheTodosData?.todos;
+    return todos?.edges.length === todos?.total;
   };
 
   return (
@@ -71,6 +85,11 @@ export const TodosList = ({ data }: TodosListProps) => {
           </IconBtnsWrap>
         </ListWrapper>
       ))}
+      <Flex>
+        <ButtonStyled disabled={allTodosReceived()} onClick={handleMore}>
+          Load More
+        </ButtonStyled>
+      </Flex>
     </>
   );
 };

@@ -1,39 +1,35 @@
-/* eslint-disable */
+import * as React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useGetTodos } from '../../graphql/hooks/useQueries/useGetTodos';
 import { Formik, Form } from 'formik';
 import { TextFieldFormik } from '../../components/uiKit/TextFieldFormik/TextFieldFormik';
 import { useCreateTodo } from '../../graphql/hooks/useMutations/useCreateTodos';
 import { useUpdatedTodoSubscription } from '../../graphql/hooks/useSubscribes/useUpdatedTodoSubscription';
-import { GET_TODOS } from '../../graphql/queries/getTodos';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRemoveTodoSubscription } from '../../graphql/hooks/useSubscribes/useRemoveTodoSubscription';
 import { TodosList } from '../../components/TodosList/TodosList';
 import { InputBlock, ComponentBlock } from './styles';
 import { SubscriptionBlock } from '../../components/SubscriptionBlock/SubscriptionBlock';
 import { useAlert } from '../../hook/useAlert';
-import { useMutation } from '@apollo/client';
-import { CREATE_TODO } from '../../graphql/mutation/createTodo.gql';
+import { SearchCustomComponent } from '../../components/SearchCustom/SearchCustom';
 
 export const TestingGqlPage = () => {
+  const [title, setTitle] = useState('');
   const { handleClickVariant } = useAlert();
+  const countSkip = useRef(0);
 
-  // eslint-disable-next-line no-unused-vars
-  const { data } = useGetTodos({
+  const { data, fetchMore, refetch } = useGetTodos({
     variables: {
       data: {
-        limit: null,
+        limit: 5,
+        skip: countSkip.current,
+        title: title,
       },
     },
   });
 
   const [createTodoMutation] = useCreateTodo();
-  // const [createTodo] = useMutation(CREATE_TODO, {
-  //   update(cache) {
-  //     console.log(cache.readQuery({ query: GET_TODOS }));
-  //   },
-  // });
 
   const handleSubmit = (values, { resetForm }) => {
     return createTodoMutation({
@@ -41,65 +37,23 @@ export const TestingGqlPage = () => {
         data: values,
       },
       onCompleted: () => resetForm(),
-
-      // update(cache, { data: { createTodo } }) {
-      //   const { todos } = cache.readQuery({
-      //     query: GET_TODOS,
-      //     variables: {
-      //       data: {
-      //         limit: null,
-      //       },
-      //     },
-      //   });
-      //   const newTotal = todos?.total + 1;
-      //
-      //   cache.writeQuery({
-      //     query: GET_TODOS,
-      //     variables: {
-      //       data: {
-      //         limit: null,
-      //       },
-      //     },
-      //     data: {
-      //       todos: {
-      //         __typename: 'todos',
-      //         total: newTotal,
-      //         edges: [...todos.edges, createTodo],
-      //       },
-      //     },
-      //   });
-      // },
     });
   };
 
-  const { data: updatedTodoSubscription } = useUpdatedTodoSubscription({
-    onSubscriptionData: ({ client, subscriptionData }) => {
-      console.log(subscriptionData.data.updatedTodo);
-      client.cache.modify({
-        fields: {
-          todos(currentTodo = []) {
-            return {
-              __typename: 'todos',
-              total: currentTodo.total + 1,
-              edges: [...currentTodo.edges, currentTodo],
-            };
-          },
-        },
-      });
-    },
-  });
+  const { data: updatedTodoSubscription } = useUpdatedTodoSubscription();
 
   const { data: removeTodoSubscription } = useRemoveTodoSubscription({
     onSubscriptionData: ({ client, subscriptionData }) => {
       client.cache.modify({
         fields: {
-          todos(currentTodo = []) {
+          todos(currentTodo) {
             return {
               __typename: 'todos',
-              total: currentTodo.total - 1,
-              edges: currentTodo.edges?.filter(
+              total: currentTodo?.total - 1,
+              edges: currentTodo?.edges?.filter(
                 (todo) =>
-                  todo.__ref !== `Todo:${subscriptionData.data.removedTodo.id}`,
+                  todo?.__ref !==
+                  `Todo:${subscriptionData.data.removedTodo.id}`,
               ),
             };
           },
@@ -114,9 +68,33 @@ export const TestingGqlPage = () => {
     }
   }, [updatedTodoSubscription, removeTodoSubscription]);
 
+  const handleMore = async () => {
+    countSkip.current += 1;
+    await fetchMore({
+      variables: {
+        data: {
+          limit: 5,
+          skip: countSkip.current * 5,
+          title: title,
+        },
+      },
+    });
+  };
+
+  const searchTodo = async (text: string) => {
+    countSkip.current = 0;
+    await setTitle(text);
+    await refetch();
+  };
+
   return (
     <Box p={'20px'}>
       <Box>
+        <Typography variant={'h2'}>Search Todo</Typography>
+        <Box mb={3}>
+          <SearchCustomComponent searchTodo={searchTodo} />
+        </Box>
+
         <Typography variant={'h2'}>Create Todo</Typography>
         <Formik
           onSubmit={handleSubmit}
@@ -130,12 +108,12 @@ export const TestingGqlPage = () => {
               <Form>
                 <InputBlock>
                   <TextFieldFormik
-                    sx={{ width: '200px' }}
+                    sx={{ width: '350px' }}
                     name={'title'}
                     label={'Title'}
                   />
                   <TextFieldFormik
-                    sx={{ width: '200px' }}
+                    sx={{ width: '350px' }}
                     name={'description'}
                     label={'Description'}
                   />
@@ -159,7 +137,7 @@ export const TestingGqlPage = () => {
       </Box>
       <Box sx={{ display: 'flex', gap: '50px' }}>
         <ComponentBlock>
-          <TodosList data={data} />
+          <TodosList data={data} handleMore={handleMore} />
         </ComponentBlock>
         <ComponentBlock>
           <SubscriptionBlock

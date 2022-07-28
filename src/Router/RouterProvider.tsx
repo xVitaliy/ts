@@ -13,6 +13,7 @@ import { RegisterPage } from '../pages/RegisterPage/RegisterPage';
 import { ResetPasswordStepTwoPage } from '../pages/ResetPasswordOkPage/ResetPasswordStepTwoPage';
 import { ChangePasswordPage } from '../pages/ChangePasswordPage/ChangePasswordPage';
 import { TestingGqlPage } from '../pages/TestingGqlPage/TestingGqlPage';
+import { LoginPage } from '../pages/LoginPage/LoginPage';
 
 type RequireAuthProps = {
   children: JSX.Element;
@@ -23,14 +24,6 @@ export const RouterProvider = () => {
     <BrowserRouter>
       <Routes>
         <Route path={'/'} element={<Layout />}>
-          <Route
-            index
-            element={
-              <RequireAuth>
-                <HomePage />
-              </RequireAuth>
-            }
-          />
           <Route
             index
             element={
@@ -54,13 +47,14 @@ export const RouterProvider = () => {
           />
           <Route path={'change-password'} element={<ChangePasswordPage />} />
           <Route path={'registration'} element={<RegisterPage />} />
+          <Route path={'login'} element={<LoginPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 };
 
-export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
+export const RequireAuth = ({ children }: RequireAuthProps) => {
   const token = localStorage.getItem('myToken');
   const location = useLocation();
   const isAuth = !!token;

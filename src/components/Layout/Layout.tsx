@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 //   children?: ReactNode;
 // };
 
-export const Layout: React.FC = () => {
+export const Layout = () => {
   return (
     <Box>
       <Header />
